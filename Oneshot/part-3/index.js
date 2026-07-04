@@ -1,27 +1,22 @@
-const express = require('express');
+const express = require('express'); 
 const app =express();
+// connecting the db with this file
+const connectDB = require('./db');
+const userRoutes = require('./Routes/Mohan');
+const dotenv = require('dotenv')
 
-const PORT= 3000;
+//load
+dotenv.config();
+const port= process.env.PORT ;
 
-//Import the Mongoose library:
-const mongoose = require("mongoose");
+//conncect to Db
+connectDB();
+ 
+//body parser
+app.use(express.json());
+app.use('/api', userRoutes);
 
-// Create a connectDB function
-const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(``,{
-        useNewUrlParser: true;
-    });
-
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(error.message);
-    process.exit(1);
-  }
-};
-
-module.exports = connectDB;
-
+// -> /api/users
 
 
 app.get('/',(req,res)=>{
