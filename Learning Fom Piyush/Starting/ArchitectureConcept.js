@@ -1,0 +1,22 @@
+const fs = require("fs");
+
+
+//execution is top to bottom 
+
+// console.log("1");
+//Blocking...
+// const result = fs.readFileSync("./copy.txt","utf-8");
+// console.log(result);
+// console.log("2");
+
+
+ console.log("1");
+//Non-Blocking...
+fs.readFile("./copy.txt","utf-8",(err,result)  => {
+    console.log(result);
+});
+
+
+console.log("2");
+console.log("3");
+console.log("4");
