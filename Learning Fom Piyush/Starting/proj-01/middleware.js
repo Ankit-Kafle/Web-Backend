@@ -54,6 +54,9 @@ res.send(html);
 })
 
 app.get('/api/users', (req,res) => {
+  res.setHeader("X-myName","Ankit kafle");   //setting up the custom response header
+  //Good practise: Always add x to coustom headers
+  console.log(req.headers)
   console.log('I am in get route', req.myUserName);
     return res.json(users);
 })
