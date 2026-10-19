@@ -6,6 +6,7 @@ const PORT = 8006;
 const path = require("path");
 
 // Middleware-plugin
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // app.use((req,res,next) =>{                        //2nd middleware
@@ -62,7 +63,9 @@ app.get('/api/users', (req,res) => {
 app.route('/api/users/:id')
 .get( (req,res) => {
     const id = Number(req.params.id);
-    const user = users.find((user) => user.id === id);
+    const user = users.find((user) => user[0].id === id); 
+    // const user = users.find((user) => user[0].id === id);   //for testing server err0r 500
+    if(!user) return res.status(404).json({error:"user not found"}); //TEST for unknown user beyond our list
     return res.json(user);
 })
 
@@ -133,14 +136,27 @@ app.route('/api/users/:id')
   });
 })
 
-app.post("/api/users", (req,res) => {
-const body = req.body;
-// console.log('Body',body)
-users.push({...body, id: users.length+1});
-fs.writeFile("./MOCK_DATA.json", JSON.stringify(users), (err,data) => {
-return res.json({status:"Success", id: users.length });
-});
-    
+app.post("/api/users", (req, res) => {
+  const body = req.body;
+  if(!body || !body.first_name || !body.last_name || !body.email || !body.job_title ){
+    return res.status(400).json({msg: 'All fields are req'});                           //Bad request 
+  }
+  const newId =
+    users.length > 0 ? Math.max(...users.map((user) => Number(user.id))) + 1 : 1;
+
+  const newUser = { ...body, id: newId };
+  users.push(newUser);
+
+  fs.writeFile(
+    path.join(__dirname, "MOCK_DATA.json"),
+    JSON.stringify(users, null, 2),
+    (err) => {
+      if (err) {
+        return res.status(500).json({ status: "Could not save users" });
+      }
+      return res.status(201).json({ status: "Success", id: newId }); //sending status code if our request is sucess i.e maintaining the standards
+    }
+  );
 });
 
 
