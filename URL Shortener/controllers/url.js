@@ -8,13 +8,17 @@ const shortID = nanoid(8);
 await URL.create({
     shortID: shortID,
     redirectURL: body.url,
-    visitHistory : []
+    visitHistory : [],
+    createdBy: req.user._id,
 })
+
+const urls = await URL.find({ createdBy: req.user._id });
 
 return res.render('home',{
     id: shortID,
+    urls,
 });
-    return res.json({id: shortID});
+    // return res.json({id: shortID});
 }
 
 
