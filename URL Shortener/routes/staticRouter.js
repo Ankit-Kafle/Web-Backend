@@ -19,5 +19,10 @@ router.get('/login', (req,res) =>{
 return res.render("login");
 })
 
+router.post('/logout', (req, res) => {
+    res.clearCookie('uid', { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production' });
+    return res.redirect('/login');
+})
+
 
 module.exports = router;

@@ -12,9 +12,9 @@
     <% } %>
     <form action="/user/login" method="post">
         <label>Email</label>
-        <input type="text" required name="email"/>
+        <input type="email" required name="email" autocomplete="email"/>
         <label>Password</label>
-        <input type="password" required name="password"/>
+        <input type="password" required name="password" autocomplete="current-password"/>
 
         <button type="submit">Login</button>
     </form>

@@ -1,13 +1,22 @@
-const { nanoid } = require("nanoid")
+const { randomBytes } = require("node:crypto")
 const URL = require('../models/url')
 
 async function handlegenerateNewShortURL(req,res) {
 const body = req.body;
 if(!body.url) return res.status(400).json({error:'url is required'})
-const shortID = nanoid(8);
+let parsedURL;
+try {
+    parsedURL = new globalThis.URL(body.url);
+} catch {
+    return res.status(400).json({ error: "Enter a valid http or https URL." });
+}
+if (!['http:', 'https:'].includes(parsedURL.protocol)) {
+    return res.status(400).json({ error: "Only http and https URLs are supported." });
+}
+const shortID = randomBytes(6).toString('base64url');
 await URL.create({
     shortID: shortID,
-    redirectURL: body.url,
+    redirectURL: parsedURL.toString(),
     visitHistory : [],
     createdBy: req.user._id,
 })
@@ -24,7 +33,7 @@ return res.render('home',{
 
 async function  handleGetAnalytics(req, res) {
     const shortID = req.params.shortID;
-    const result = await URL.findOne({shortID})
+    const result = await URL.findOne({ shortID, createdBy: req.user._id })
     if (!result) {
         return res.status(404).json({ error: 'short URL not found' });
     }

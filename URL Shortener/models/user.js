@@ -13,6 +13,8 @@ required: true,
     type: String,
     required:true,
     unique: true,
+    lowercase: true,
+    trim: true,
  },
 
  password: {

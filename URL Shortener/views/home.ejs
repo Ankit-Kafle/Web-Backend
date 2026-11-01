@@ -17,13 +17,14 @@
     <form method = "POST" action="/url">
         <label> Enter Your Orginal URL</label>
         <input 
-        type="text" 
+        type="url"
         name="url" 
         placeholder="https://example.com"/>
 
         <button type="submit">Generate</button>
     </form>
 </div>
+<form method="post" action="/logout"><button type="submit">Log out</button></form>
 
 <div>
 <% if (locals.urls) { %>

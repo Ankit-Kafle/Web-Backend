@@ -7,13 +7,14 @@
 </head>
 <body>
     <h1>Signup</h1>
+    <% if (locals.error) { %><p role="alert"><%= error %></p><% } %>
     <form action="/user" method="post">
         <label>Full Name</label>
         <input type="text" required name="name"/>
         <label>Email</label>
-        <input type="text" required name="email"/>
+        <input type="email" required name="email" autocomplete="email"/>
         <label>Password</label>
-        <input type="password" required name="password"/>
+        <input type="password" required minlength="8" name="password" autocomplete="new-password"/>
 
         <button type="submit">Signup</button>
     </form>

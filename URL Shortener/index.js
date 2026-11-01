@@ -1,5 +1,16 @@
 const express = require('express');
 const path = require('path');
+const fs = require('node:fs');
+
+// Load simple KEY=VALUE entries so the app does not need an extra dotenv dependency.
+const envPath = path.join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+    for (const line of fs.readFileSync(envPath, 'utf8').split(/\r?\n/)) {
+        const match = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/);
+        if (match && !process.env[match[1]]) process.env[match[1]] = match[2].replace(/^(["'])(.*)\1$/, '$2');
+    }
+}
+if (!process.env.JWT_SECRET) throw new Error('Set JWT_SECRET in .env or the process environment before starting the server.');
 
 const { connectToMongoDB } = require('./connect');
 const cookieParser = require('cookie-parser')

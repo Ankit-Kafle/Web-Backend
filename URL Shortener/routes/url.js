@@ -4,6 +4,6 @@ const router = express.Router();
 
 router.post("/",handlegenerateNewShortURL);
 
-router.get('/analytics/:shortID',handleGetAnalytics)
+router.get('/analytics/:shortID', require('../middlewares/auth').restrictToLoggedinUserOnly, handleGetAnalytics)
 
 module.exports= router;
